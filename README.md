@@ -12,7 +12,7 @@
 Visit the application at INSERT URL HERE.
 
 ## Description
-A Reddit clone, built with tutorial by Ben Awad. Visit [credits](#credits) section for full link.
+A Reddit clone, built with tutorial by Ben Awad. Visit [credits](#credits) section for links.
 
 ## Technologies
 * TypeScript
