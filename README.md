@@ -29,6 +29,7 @@ A Reddit clone, built with tutorial by Ben Awad. Visit [credits](#credits) secti
 * TypeGraphQL
 * Semantic UI
 * Chakra
+* Argon2
 
 ## Usage
 Will update on program completion.
