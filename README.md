@@ -38,5 +38,5 @@ Will update on program completion.
 
 ## Credits
 Made from tutorial by Ben Awad.  
-Access the full tutorial [here](https://www.youtube.com/watch?v=I6ypD7qv3Z8)
+Access the full tutorial [here](https://www.youtube.com/watch?v=I6ypD7qv3Z8).  
 Original codebase: https://github.com/benawad/lireddit

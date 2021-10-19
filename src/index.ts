@@ -1,3 +1,5 @@
+// required dependency with typegraph-ql
+import "reflect-metadata";
 import { MikroORM } from "@mikro-orm/core";
 import microConfig from './mikro-orm.config';
 // import { Post } from './entities/Post';
@@ -5,6 +7,7 @@ import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { HelloResolver } from "./resolvers/hello";
+import { PostResolver } from './resolvers/post';
 
 const main = async () => {
   const orm = await MikroORM.init(microConfig);
@@ -14,9 +17,11 @@ const main = async () => {
   const app = express();
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver],
+      resolvers: [HelloResolver, PostResolver],
       validate: false
-    })
+    }),
+    // function that returns an orm object for the context
+    context: () => ({ em: orm.em })
   });
 
   const startServer = async() => {
