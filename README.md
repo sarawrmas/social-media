@@ -25,6 +25,7 @@ A Reddit clone, built with tutorial by Ben Awad. Visit [credits](#credits) secti
 * GraphQL
 * URQL/Apollo
 * Redis
+* Express-Session
 * Next.js
 * TypeGraphQL
 * Semantic UI

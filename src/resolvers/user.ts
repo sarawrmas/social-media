@@ -1,4 +1,4 @@
-import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Resolver } from "type-graphql";
+import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Resolver, Query } from "type-graphql";
 import { User } from "../entities/User";
 import { MyContext } from "../types";
 import argon2 from 'argon2';
@@ -31,17 +31,29 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
+  @Query(() => User, {nullable: true})
+  async me(
+    @Ctx() { em, req }: MyContext
+  ) {
+    // you are not logged in
+    if (!req.session.userId) {
+      return null
+    }
+    const user = await em.findOne(User, {id: req.session.userId});
+    return user;
+  }
+
   @Mutation(() => UserResponse)
   async register(
-    @Arg('options') options: UsernamePasswordInput,
-    @Ctx() { em }: MyContext
+    @Arg("options") options: UsernamePasswordInput,
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     if (options.username.length <= 2) {
       return {
         errors: [
           {
-            field: 'username',
-            message: 'Username length must be greater than 2'
+            field: "username",
+            message: "Username length must be greater than 2"
           }
         ]
       }
@@ -50,8 +62,8 @@ export class UserResolver {
       return {
         errors: [
           {
-            field: 'password',
-            message: 'Password length must be greater than 6'
+            field: "password",
+            message: "Password length must be greater than 6"
           }
         ]
       }
@@ -77,23 +89,26 @@ export class UserResolver {
         }
       }
     }
-    return {
-      user
-    };
+
+    req.session.userId = user.id;
+
+    return { user };
   }
 
   @Mutation(() => UserResponse)
   async login(
-    @Arg('options') options: UsernamePasswordInput,
-    @Ctx() { em }: MyContext
+    @Arg("options") options: UsernamePasswordInput,
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
-    const user = await em.findOne(User, {username: options.username});
+    const user = await em.findOne(User, { username: options.username });
     if (!user) {
       return {
-        errors: [{
-          field: "username",
-          message: "Username does not exist"
-        }]
+        errors: [
+          {
+            field: "username",
+            message: "Username does not exist"
+          }
+        ]
       }
     }
     const valid = await argon2.verify(user.password, options.password);
@@ -101,15 +116,15 @@ export class UserResolver {
       return {
         errors: [
           {
-            field: 'password',
-            message: 'Incorrect password'
+            field: "password",
+            message: "Incorrect password"
           }
         ]
       }
     }
 
-    return {
-      user
-    };
+    req.session.userId = user.id;
+
+    return { user };
   }
 }
