@@ -33,6 +33,8 @@ const main = async () => {
     origin: "http://localhost:3000",
     credentials: true
   }))
+  
+
 
   app.use(
     session({
@@ -69,7 +71,7 @@ const main = async () => {
 
   const startServer = async() => {
     await apolloServer.start();
-    apolloServer.applyMiddleware({ app });
+    apolloServer.applyMiddleware({ app, cors: false });
   }
 
   startServer();

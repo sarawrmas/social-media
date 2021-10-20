@@ -34,7 +34,7 @@ class UserResponse {
 export class UserResolver {
   @Query(() => User, {nullable: true})
   async me(
-    @Ctx() { em, req }: MyContext
+    @Ctx() { req, em }: MyContext
   ) {
     // you are not logged in
     if (!req.session.userId) {
@@ -117,6 +117,7 @@ export class UserResolver {
         ]
       }
     }
+
     const valid = await argon2.verify(user.password, options.password);
     if (!valid) {
       return {
@@ -130,6 +131,8 @@ export class UserResolver {
     }
 
     req.session.userId = user.id;
+
+    console.log(req.session)
 
     return { user };
   }

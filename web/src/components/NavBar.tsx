@@ -27,8 +27,8 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
     body = (
       <>
         <Flex>
-          <Box mr={2}>{data.me.username}</Box>
-          <Button>Logout</Button>
+          <Box mr={6}>{data.me.username}</Box>
+          <Button bg="purple" color="white">Logout</Button>
         </Flex>
       </>
     )
