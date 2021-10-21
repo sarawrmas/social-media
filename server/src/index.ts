@@ -10,7 +10,7 @@ import { UserResolver } from "./resolvers/user";
 import redis from 'redis';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
-import { __prod__ } from "./constants";
+import { __prod__, COOKIE_NAME } from "./constants";
 import { MyContext } from "./types";
 import cors from 'cors';
 require('dotenv').config();
@@ -38,7 +38,7 @@ const main = async () => {
 
   app.use(
     session({
-      name: 'qid',
+      name: COOKIE_NAME,
       store: new RedisStore({
         client: redisClient,
         // do not expire session to limit requests to redis
