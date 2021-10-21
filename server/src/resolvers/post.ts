@@ -7,6 +7,7 @@ export class PostResolver {
   @Query(() => [Post])
   posts(@Ctx() { em }: MyContext): Promise<Post[]> {
     // return all posts
+    // await sleep(5000)
     return em.find(Post, {});
   }
 

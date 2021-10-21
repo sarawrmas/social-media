@@ -31,6 +31,7 @@ A Reddit clone, built with tutorial by Ben Awad. Visit [credits](#credits) secti
 * Semantic UI
 * Chakra
 * Argon2
+* Nodemailer
 
 ## Usage
 Will update on program completion.
