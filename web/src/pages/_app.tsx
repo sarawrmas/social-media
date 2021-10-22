@@ -66,6 +66,7 @@
 // export default MyApp
 
 import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react'
+import { jsx } from '@emotion/react';
 // import { createClient, Provider } from 'urql'
 import { withUrqlClient } from 'next-urql';
 import theme from '../theme'
