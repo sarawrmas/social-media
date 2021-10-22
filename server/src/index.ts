@@ -7,40 +7,34 @@ import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { PostResolver } from './resolvers/post';
 import { UserResolver } from "./resolvers/user";
-import redis from 'redis';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
 import { __prod__, COOKIE_NAME } from "./constants";
-import { MyContext } from "./types";
+// import { MyContext } from "./types";
 import cors from 'cors';
+import Redis from "ioredis";
 require('dotenv').config();
 
 const main = async () => {
   const orm = await MikroORM.init(microConfig);
-  // run migrations before it does anything else
+  // run migrations on server start
   await orm.getMigrator().up();
 
   const app = express();
 
   const RedisStore = connectRedis(session);
-  const redisClient = redis.createClient();
-
-  redisClient.on("error", function (err) {
-    console.log("Error: " + err);
-  })
+  const redis = new Redis();
 
   app.use(cors({
     origin: "http://localhost:3000",
     credentials: true,
   }))
-  
-
 
   app.use(
     session({
       name: COOKIE_NAME,
       store: new RedisStore({
-        client: redisClient,
+        client: redis,
         // do not expire session to limit requests to redis
         disableTouch: true,
       }),
@@ -66,7 +60,9 @@ const main = async () => {
       validate: false
     }),
     // function that returns an object for the context
-    context: ({ req, res }): MyContext => <MyContext>({ em: orm.em, req, res })
+    context: ({ req, res }) =>
+    // : MyContext => <MyContext>
+    ({ em: orm.em, req, res, redis })
   });
 
   const startServer = async() => {
