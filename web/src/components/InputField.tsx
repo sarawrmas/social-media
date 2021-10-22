@@ -14,7 +14,7 @@ const InputField: React.FC<InputFieldProps> = ({label, size: _, ...props}) => {
     // convert error to boolean
     <FormControl isInvalid={!!error}>
       <FormLabel htmlFor={field.name}>{label}</FormLabel>
-      <Input {...field} {...props} id={field.name} />
+      <Input {...field} {...props} id={field.name} p={15}/>
       {error ? <FormErrorMessage>{error}</FormErrorMessage> : null}
     </FormControl>
   )

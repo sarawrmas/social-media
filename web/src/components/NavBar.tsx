@@ -20,7 +20,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
     body = (
       <>
         <NextLink href="login">
-          <Link mr={2}>Login</Link>
+          <Link mr={8}>Login</Link>
         </NextLink>
         <NextLink href="register">
           <Link>Register</Link>
@@ -46,7 +46,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
 
   return (
     <>
-    <Flex bg="#521B41" p={4} color="white" fontSize="20px">
+    <Flex bg="#521B41" p={15} color="white" fontSize="20px">
       <Box mr={'auto'}>
         Social Media
       </Box>
