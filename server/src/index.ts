@@ -4,6 +4,7 @@ import { MikroORM } from "@mikro-orm/core";
 import microConfig from './mikro-orm.config';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import { buildSchema } from 'type-graphql';
 import { PostResolver } from './resolvers/post';
 import { UserResolver } from "./resolvers/user";
@@ -46,7 +47,7 @@ const main = async () => {
         // cookie only works in https when in production mode
         secure: __prod__,
         // protect csrf
-        sameSite: "lax"
+        sameSite: "lax",
       },
       saveUninitialized: false,
       secret: `${process.env.DB_SECRET}`,
@@ -57,8 +58,12 @@ const main = async () => {
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [PostResolver, UserResolver],
-      validate: false
+      validate: false,
     }),
+    introspection: true,
+    plugins: [
+      ApolloServerPluginLandingPageGraphQLPlayground()
+    ],
     // function that returns an object for the context
     context: ({ req, res }) =>
     // : MyContext => <MyContext>

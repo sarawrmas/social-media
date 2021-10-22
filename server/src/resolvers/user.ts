@@ -210,6 +210,7 @@ export class UserResolver {
     }
     user.password = await argon2.hash(newPassword)
     await em.persistAndFlush(user);
+    redis.del(key);
     // log user in after password change
     req.session.userId = user.id
     return { user };
