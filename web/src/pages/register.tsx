@@ -2,7 +2,7 @@ import React from "react";
 import { Formik, Form } from 'formik';
 import Wrapper from '../components/Wrapper';
 import InputField from "../components/InputField";
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Flex } from "@chakra-ui/react";
 import { useRegisterMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 import { useRouter } from "next/router";
@@ -34,7 +34,9 @@ const Register: React.FC<registerProps> = ({}) => {
             <Box mt={4}>
             <InputField name="password" placeholder="Password" label="Password" type="password" />
             </Box>
-            <Button mt={4} type="submit" isLoading={isSubmitting} background="purple" color="white" p={15}>Register</Button>
+            <Flex justifyContent="center">
+              <Button mt={4} type="submit" isLoading={isSubmitting} background="purple" color="white" p={15}>Register</Button>
+            </Flex>
           </Form>
         )}
       </Formik>

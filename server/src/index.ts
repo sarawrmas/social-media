@@ -14,7 +14,6 @@ import connectRedis from 'connect-redis';
 import { __prod__, COOKIE_NAME } from "./constants";
 import { Post } from "./entities/Post";
 import { User } from "./entities/User";
-// import { MyContext } from "./types";
 import cors from 'cors';
 import Redis from "ioredis";
 require('dotenv').config();
@@ -30,10 +29,9 @@ const main = async () => {
     synchronize: true,
     entities: [Post, User]
   });
-  
-  // const orm = await MikroORM.init(microConfig);
-  // // run migrations on server start
-  // await orm.getMigrator().up();
+  // // clear database
+  // await Post.delete({});
+  // await User.delete({});
 
   const app = express();
 

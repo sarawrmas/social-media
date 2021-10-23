@@ -11,6 +11,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
     // do not run query if no data
     pause: isServer()
   });
+  console.log(data?.me)
   let body = null;
   // data is loading
   if (fetching) {
@@ -46,9 +47,11 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
 
   return (
     <>
-    <Flex bg="#521B41" p={15} color="white" fontSize="20px">
+    <Flex bg="#521B41" p={15} color="white" fontSize="20px" position="sticky" top={0} zIndex={99999}>
       <Box mr={'auto'}>
-        Social Media
+        <NextLink href="/">
+          Social Media
+        </NextLink>
       </Box>
       <Box ml={'auto'}>
         {body}
