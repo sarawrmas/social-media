@@ -37,7 +37,7 @@ export type MutationCreatePostArgs = {
 
 
 export type MutationUpdatePostArgs = {
-  title?: Maybe<Scalars['String']>;
+  postTitle?: Maybe<Scalars['String']>;
   id: Scalars['Float'];
 };
 
@@ -71,8 +71,8 @@ export type MutationChangePasswordArgs = {
 export type Post = {
   __typename?: 'Post';
   id: Scalars['Float'];
-  title: Scalars['String'];
-  body: Scalars['String'];
+  postTitle: Scalars['String'];
+  postBody: Scalars['String'];
   points: Scalars['Float'];
   creatorId: Scalars['Float'];
   createdAt: Scalars['String'];
@@ -80,8 +80,8 @@ export type Post = {
 };
 
 export type PostInput = {
-  title: Scalars['String'];
-  body: Scalars['String'];
+  postTitle: Scalars['String'];
+  postBody: Scalars['String'];
 };
 
 export type Query = {
@@ -161,7 +161,7 @@ export type CreatePostMutation = (
   { __typename?: 'Mutation' }
   & { createPost: (
     { __typename?: 'Post' }
-    & Pick<Post, 'title' | 'body'>
+    & Pick<Post, 'postTitle' | 'postBody' | 'creatorId' | 'points' | 'createdAt' | 'updatedAt'>
   ) }
 );
 
@@ -228,7 +228,7 @@ export type PostsQuery = (
   { __typename?: 'Query' }
   & { posts: Array<(
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'title' | 'createdAt' | 'updatedAt'>
+    & Pick<Post, 'id' | 'postTitle' | 'postBody' | 'createdAt' | 'updatedAt'>
   )> }
 );
 
@@ -270,8 +270,12 @@ export function useChangePasswordMutation() {
 export const CreatePostDocument = gql`
     mutation CreatePost($input: PostInput!) {
   createPost(input: $input) {
-    title
-    body
+    postTitle
+    postBody
+    creatorId
+    points
+    createdAt
+    updatedAt
   }
 }
     `;
@@ -334,7 +338,8 @@ export const PostsDocument = gql`
     query Posts {
   posts {
     id
-    title
+    postTitle
+    postBody
     createdAt
     updatedAt
   }

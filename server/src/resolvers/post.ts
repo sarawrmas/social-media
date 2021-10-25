@@ -6,9 +6,9 @@ import { Post } from "../entities/Post";
 @InputType()
 class PostInput {
   @Field()
-  title: string
+  postTitle: string
   @Field()
-  body: string
+  postBody: string
 }
 
 @Resolver()
@@ -42,7 +42,7 @@ export class PostResolver {
   @Mutation(() => Post, { nullable: true })
   async updatePost(
     @Arg("id") id: number,
-    @Arg("title", () => String, { nullable: true }) title: string): Promise<Post | null> {
+    @Arg("postTitle", () => String, { nullable: true }) postTitle: string): Promise<Post | null> {
     // fetch post
     const post = await Post.findOne(id);
     // handle error post not found
@@ -50,9 +50,9 @@ export class PostResolver {
       return null;
     }
     // change post title
-    if (typeof title !== 'undefined') {
-      post.title = title;
-      Post.update({id}, {title});
+    if (typeof postTitle !== 'undefined') {
+      post.postTitle = postTitle;
+      Post.update({id}, {postTitle});
     }
     return post;
   }

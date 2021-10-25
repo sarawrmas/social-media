@@ -11,7 +11,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
     // do not run query if no data
     pause: isServer()
   });
-  console.log(data?.me)
+  // console.log(data?.me)
   let body = null;
   // data is loading
   if (fetching) {

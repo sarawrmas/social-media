@@ -18,12 +18,9 @@ const Login: React.FC<loginProps> = ({}) => {
 
   async function handleSubmit(values: any, { setErrors }: any) {
     const response = await login(values);
-    console.log(response)
     if (response.data?.login.errors) {
       setErrors(toErrorMap(response.data.login.errors));
-      console.log(response)
     } else if (response.data?.login.user) {
-      console.log(response)
       router.push("/");
     }
   }

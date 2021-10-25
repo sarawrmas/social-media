@@ -11,11 +11,11 @@ export class Post extends BaseEntity {
 
   @Field()
   @Column()
-  title!: string;
+  postTitle!: string;
 
   @Field()
   @Column()
-  body!: string;
+  postBody!: string;
 
   @Field()
   @Column({ type: "int", default: 0 })
