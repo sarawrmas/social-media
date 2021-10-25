@@ -11,14 +11,17 @@ import { withUrqlClient } from "next-urql";
 import createUrqlClient from "../../utils/createUrqlClient";
 import NextLink from "next/link";
 
-const ChangePassword: NextPage<{ token: string }> = () => {
+const ChangePassword: NextPage = () => {
   const [, changePassword] = useChangePasswordMutation();
   const [tokenError, setTokenError] = useState('');
   const router = useRouter();
-  const token = JSON.stringify(router.query.token);
+  // const token = JSON.stringify(router.query.token);
 
   async function handleSubmit(values: any, { setErrors }: any) {
-    const response = await changePassword({newPassword: values.newPassword, token})
+    const response = await changePassword({
+      newPassword: values.newPassword,
+      token: typeof router.query.token === 'string' ? router.query.token : ""
+    })
     if (response.data?.changePassword.errors) {
       const errorMap = toErrorMap(response.data.changePassword.errors)
       if ('token' in errorMap) {
