@@ -2,7 +2,7 @@ import React from "react";
 import { Formik, Form } from 'formik';
 import Wrapper from '../components/Wrapper';
 import InputField from "../components/InputField";
-import { Box, Button, Link, Flex } from "@chakra-ui/react";
+import { Box, Button, Link, Flex, Heading } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useLoginMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
@@ -27,6 +27,7 @@ const Login: React.FC<loginProps> = ({}) => {
 
   return (
     <Wrapper variant="small">
+      <Heading textAlign="center" fontSize="30px" color="pink" mb={10}>Log In</Heading>
       <Formik initialValues={{usernameOrEmail: '', password: ''}} onSubmit={handleSubmit}>
         {({isSubmitting}) => (
           <Form>

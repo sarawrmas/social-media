@@ -1,4 +1,4 @@
-import { Link, Button, Flex, Box } from "@chakra-ui/react";
+import { Link, Button, Flex, Box, Heading } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React, { useState } from "react";
 import InputField from "../components/InputField";
@@ -15,6 +15,7 @@ const ForgotPassword: React.FC<{}> = ({}) => {
   }
   return (
     <Wrapper variant="small">
+    <Heading textAlign="center" fontSize="30px" color="pink" mb={10}>Reset Password</Heading>
     <Formik initialValues={{email: ''}} onSubmit={handleSubmit}>
       {({isSubmitting}) =>
       complete ? (

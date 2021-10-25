@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import Wrapper from "../../components/Wrapper";
 import { Formik, Form } from "formik";
 import InputField from "../../components/InputField";
-import { Button, Box, Link, Flex } from "@chakra-ui/react";
+import { Button, Box, Link, Flex, Heading } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useChangePasswordMutation } from "../../generated/graphql";
 import { toErrorMap } from "../../utils/toErrorMap";
@@ -34,6 +34,7 @@ const ChangePassword: NextPage<{ token: string }> = () => {
   return (
     <>
       <Wrapper variant="small">
+      <Heading textAlign="center" fontSize="30px" color="pink" mb={10}>Change Password</Heading>
         <Formik initialValues={{ newPassword: '' }} onSubmit={handleSubmit}>
           {({isSubmitting}) => (
             <Form>

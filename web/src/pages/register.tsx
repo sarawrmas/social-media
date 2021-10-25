@@ -2,7 +2,7 @@ import React from "react";
 import { Formik, Form } from 'formik';
 import Wrapper from '../components/Wrapper';
 import InputField from "../components/InputField";
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading } from "@chakra-ui/react";
 import { useRegisterMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 import { useRouter } from "next/router";
@@ -24,6 +24,7 @@ const Register: React.FC<registerProps> = ({}) => {
 
   return (
     <Wrapper variant="small">
+      <Heading textAlign="center" fontSize="30px" color="pink" mb={10}>Register</Heading>
       <Formik initialValues={{email: '', username: '', password: ''}} onSubmit={handleSubmit}>
         {({isSubmitting}) => (
           <Form>

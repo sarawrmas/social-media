@@ -7,26 +7,16 @@ import { useRouter } from "next/router";
 import Wrapper from "../components/Wrapper";
 import { withUrqlClient } from "next-urql";
 import createUrqlClient from "../utils/createUrqlClient";
+import { userIsAuth } from "../utils/userIsAuth";
 
 const CreatePost: React.FC<{}> = ({}) => {
   const [, createPost] = useCreatePostMutation();
-  const [{ data }] = useMeQuery();
   const router = useRouter();
-
-  useEffect(() => {
-    if (data?.me === null) {
-      router.push("/login")
-    }
-  })
+  userIsAuth();
 
   async function handleSubmit(values: any) {
-    // const { error } = await createPost({ input: values });
     await createPost({ input: values });
-    console.log(values)
-    // if (error?.message.includes("Not authenticated")) {
-    //   router.push("/login")
-    // }
-      router.push("/")
+    router.push("/")
   }
 
   return (
