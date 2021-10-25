@@ -16,10 +16,11 @@ import { Post } from "./entities/Post";
 import { User } from "./entities/User";
 import cors from 'cors';
 import Redis from "ioredis";
+import path from "path";
 require('dotenv').config();
 
 const main = async () => {
-  await createConnection({
+  const conn = await createConnection({
     type: "postgres",
     database: "lireddit",
     username: "postgres",
@@ -27,11 +28,14 @@ const main = async () => {
     logging: true,
     // create tables automatically without running migration
     synchronize: true,
+    migrations: [path.join(__dirname, "./migrations/*")],
     entities: [Post, User]
   });
   // // clear database
   // await Post.delete({});
   // await User.delete({});
+
+  await conn.runMigrations()
 
   const app = express();
 

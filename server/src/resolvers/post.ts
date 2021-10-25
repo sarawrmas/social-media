@@ -1,7 +1,8 @@
 import { isAuth } from "../middleware/isAuth";
 import { MyContext } from "src/types";
-import { Arg, Ctx, Field, InputType, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
+import { Arg, Ctx, Field, FieldResolver, InputType, Int, Mutation, Query, Resolver, Root, UseMiddleware } from "type-graphql";
 import { Post } from "../entities/Post";
+import { getConnection } from "typeorm";
 
 @InputType()
 class PostInput {
@@ -11,11 +12,34 @@ class PostInput {
   postBody: string
 }
 
-@Resolver()
+@Resolver(Post)
 export class PostResolver {
+  @FieldResolver(() => String)
+  textSnippet(@Root() root: Post) {
+    const maxLength = 100
+    const trimmedString = root.postBody.substr(0, maxLength);
+    return trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" "))) + "..."
+    // return root.postBody.slice(0, 100)
+  }
+
   @Query(() => [Post])
-  async posts(): Promise<Post[]> {
-    return Post.find();
+  async posts(
+    @Arg('limit', () => Int) limit: number,
+    @Arg('cursor', () => String, { nullable: true }) cursor: string | null
+  ): Promise<Post[]> {
+    // pagination logic
+    const realLimit = Math.min(50, limit);
+    const qb = getConnection()
+    .getRepository(Post)
+    .createQueryBuilder("post")
+    .orderBy('"createdAt"', "DESC")
+    .take(realLimit)
+
+    if (cursor) {
+      qb.where('"createdAt" < :cursor', { cursor: new Date(parseInt(cursor)) })
+    }
+
+    return qb.getMany()
   }
 
   @Query(() => Post, {nullable: true})

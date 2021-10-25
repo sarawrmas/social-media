@@ -56,7 +56,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
     <Flex bg="#521B41" p={15} color="white" fontSize="20px" position="sticky" top={0} zIndex={99999}>
       <Box mr={'auto'}>
         <NextLink href="/">
-          Social Media
+          LiReddit
         </NextLink>
       </Box>
       <Box ml={'auto'}>
