@@ -21,7 +21,13 @@ const Login: React.FC<loginProps> = ({}) => {
     if (response.data?.login.errors) {
       setErrors(toErrorMap(response.data.login.errors));
     } else if (response.data?.login.user) {
-      router.push("/");
+      // redirect user to page they were trying to access before being redirected to login
+      if (typeof router.query.next === 'string') {
+        router.push(router.query.next);
+      } else {
+      // if user simply wants to login, take them to the homepage after
+        router.push("/")
+      }
     }
   }
 
