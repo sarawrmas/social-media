@@ -1,4 +1,4 @@
-import { Arg, Ctx, Field, Mutation, ObjectType, Resolver, Query } from "type-graphql";
+import { Arg, Ctx, Field, Mutation, ObjectType, Resolver, Query, FieldResolver, Root } from "type-graphql";
 import { User } from "../entities/User";
 import { MyContext } from "../types";
 import argon2 from 'argon2';
@@ -27,8 +27,18 @@ class UserResponse {
   user?: User;
 }
 
-@Resolver()
+@Resolver(User)
 export class UserResolver {
+  @FieldResolver(() => String)
+  email(@Root() user: User, @Ctx() {req}: MyContext) {
+    // only show user email if post was made by current user
+    if (req.session.userId === user.id) {
+      return user.email;
+    }
+    // creator is NOT current user so don't show email
+    return "";
+   }
+  
   @Query(() => User, {nullable: true})
   me(
     @Ctx() { req }: MyContext

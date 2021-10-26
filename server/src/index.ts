@@ -17,6 +17,7 @@ import { User } from "./entities/User";
 import cors from 'cors';
 import Redis from "ioredis";
 import path from "path";
+import { Updoot } from "./entities/Updoot";
 require('dotenv').config();
 
 const main = async () => {
@@ -29,7 +30,7 @@ const main = async () => {
     // create tables automatically without running migration
     synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
-    entities: [Post, User]
+    entities: [Post, User, Updoot]
   });
   // // clear database
   // await Post.delete({});
