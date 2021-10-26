@@ -1,17 +1,10 @@
 import { isAuth } from "../middleware/isAuth";
 import { MyContext } from "src/types";
-import { Arg, Ctx, Field, FieldResolver, Info, InputType, Int, Mutation, ObjectType, Query, Resolver, Root, UseMiddleware } from "type-graphql";
+import { Arg, Ctx, Field, FieldResolver, Info, Int, Mutation, ObjectType, Query, Resolver, Root, UseMiddleware } from "type-graphql";
 import { Post } from "../entities/Post";
 import { getConnection } from "typeorm";
 import { Updoot } from "../entities/Updoot";
-
-@InputType()
-class PostInput {
-  @Field()
-  postTitle: string
-  @Field()
-  postBody: string
-}
+import { PostInput } from "./PostInput";
 
 @ObjectType()
 class PaginatedPosts {
@@ -24,10 +17,8 @@ class PaginatedPosts {
 @Resolver(Post)
 export class PostResolver {
   @FieldResolver(() => String)
-  textSnippet(@Root() root: Post) {
-    const maxLength = 100
-    const trimmedString = root.postBody.substr(0, maxLength);
-    return trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" "))) + "..."
+  textSnippet(@Root() post: Post) {
+    return post.postBody.slice(0, 100);
   }
 
   @Mutation(() => Boolean)
@@ -40,11 +31,6 @@ export class PostResolver {
     const isUpdoot = value !== -1;
     const realValue = isUpdoot ? 1 : -1
     const userId = req.session.userId
-    // await Updoot.insert({
-    //   userId,
-    //   postId,
-    //   value: realValue
-    // });
 
     await getConnection().query(`
       START TRANSACTION;
@@ -87,19 +73,6 @@ export class PostResolver {
       ORDER BY p."createdAt" DESC
       LIMIT $1
     `, replacements)
-
-    // const qb = getConnection()
-    // .getRepository(Post)
-    // .createQueryBuilder("p")
-    // .innerJoinAndSelect("p.creator", "u", 'u.id = p."creatorId"')
-    // .orderBy('p."createdAt"', "DESC")
-    // .take(realLimitPlusOne)
-
-    // if (cursor) {
-    //   qb.where('p."createdAt" < :cursor', { cursor: new Date(parseInt(cursor)) })
-    // }
-
-    // const posts = await post.getMany()
 
     return { posts: posts.slice(0, realLimit), hasMore: posts.length === realLimitPlusOne }
   }

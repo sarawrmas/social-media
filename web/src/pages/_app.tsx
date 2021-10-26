@@ -85,4 +85,4 @@ function MyApp({ Component, pageProps }: any) {
   )
 }
 
-export default withUrqlClient(createUrqlClient, { ssr: false })(MyApp);
+export default withUrqlClient(createUrqlClient, { ssr: true })(MyApp);

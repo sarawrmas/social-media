@@ -5,12 +5,10 @@ import createUrqlClient from "../utils/createUrqlClient";
 import { usePostsQuery } from "../generated/graphql";
 import { Spinner, Link, Stack, Box, Heading, Text, Flex, Button } from "@chakra-ui/react"
 import NextLink from "next/link";
-// import NavBar from '../components/NavBar';
 import Wrapper from '../components/Wrapper';
-// import Wrapper from '../components/Wrapper';
 
 const Index = () => {
-  const [variables, setVariables] = useState({ limit: 50, cursor: null as null | string})
+  const [variables, setVariables] = useState({ limit: 20, cursor: null as null | string})
   const [{data, fetching}] = usePostsQuery({
     // pagination
     variables
@@ -22,7 +20,6 @@ const Index = () => {
 
   return (
     <Wrapper>
-      {/* <NavBar /> */}
       {!data && fetching ? (
         <Flex justifyContent="center">
           <Spinner size="xl" color="blue.500"/>
@@ -39,6 +36,7 @@ const Index = () => {
               <Box key={p.id} p={5} shadow="md" borderWidth="1px">
                 <Heading fontSize="xl">{p.postTitle}</Heading>
                 <Text mt={4}>{p.textSnippet}</Text>
+                <Text>By {p.creator.username}</Text>
               </Box>
             ))}
           </Stack>
@@ -69,4 +67,4 @@ const Index = () => {
   )
 }
 
-export default withUrqlClient(createUrqlClient, { ssr: false })(Index);
+export default withUrqlClient(createUrqlClient)(Index);
