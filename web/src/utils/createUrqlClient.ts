@@ -1,7 +1,8 @@
 import { dedupExchange, fetchExchange, stringifyVariables } from 'urql'
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
-import { MeDocument, LoginMutation, MeQuery, RegisterMutation, LogoutMutation } from '../generated/graphql';
+import { MeDocument, LoginMutation, MeQuery, RegisterMutation, LogoutMutation, VoteMutationVariables } from '../generated/graphql';
 import { betterUpdateQuery } from './betterUpdateQuery';
+import gql from 'graphql-tag';
 
 export const cursorPagination = (): Resolver => {
   return (_parent, fieldArgs, cache, info) => {
@@ -53,11 +54,29 @@ const createUrqlClient = (ssrExchange: any) => ({
       },
       updates: {
         Mutation: {
-          // createPost: (_result, args, cache, info) => {
-          //   cache.invalidate('Query', 'posts', {
-          //     limit: 15
-          //   })
-          // },
+          vote: (_result, args, cache, info) => {
+            const { postId, value } = args as VoteMutationVariables;
+            const data = cache.readFragment(gql`
+              fragment _ on Post {
+                id
+                points
+                voteStatus
+              }
+            `, { id: postId } as any);
+            if (data) {
+              if (data.voteStatus === args.value) {
+                return;
+              }
+              const newPoints = (data.points as number) + ((!data.voteStatus ? 1 : 2) * value);
+              cache.writeFragment(gql`
+                fragment __ on Post {
+                  points
+                  voteStatus
+                }
+              `,  { id: postId, points: newPoints, voteStatus: value } as any)
+            }
+          },
+
           createPost: (_result, args, cache, info) => {
             const allFields = cache.inspectFields("Query");
             const fieldInfos = allFields.filter(

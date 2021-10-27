@@ -32,15 +32,36 @@ export class PostResolver {
     const realValue = isUpdoot ? 1 : -1
     const userId = req.session.userId
 
-    await getConnection().query(`
-      START TRANSACTION;
-      INSERT INTO updoot ("userId", "postId", value)
-      values (${userId}, ${postId}, ${realValue});
-      UPDATE post
-      SET points = points + ${realValue}
-      WHERE id = ${postId};
-      COMMIT;
-    `);
+    const updoot = await Updoot.findOne({where: {postId, userId} })
+
+    // user has already voted on post and wants to change their vote
+    if (updoot && updoot.value !== realValue) {
+      await getConnection().transaction(async (tm) => {
+        await tm.query(`
+          UPDATE updoot
+          SET value = $1
+          WHERE "postId" = $2 and "userId" = $3
+        `, [realValue, postId, userId]);
+        await tm.query(`
+          UPDATE post
+          SET points = points + $1
+          WHERE id = $2
+        `, [2 * realValue, postId])
+      });
+    // has not voted on post and wants to vote
+    } else if (!updoot) {
+      await getConnection().transaction(async tm => {
+        await tm.query(`
+          INSERT INTO updoot ("userId", "postId", value)
+          values ($1, $2, $3)
+        `, [userId, postId, realValue]);
+        await tm.query(`
+          UPDATE post
+          SET points = points + $1
+          WHERE id = $2
+        `, [realValue, postId])
+      });
+    }
 
     return true;
   }
@@ -48,13 +69,15 @@ export class PostResolver {
   @Query(() => PaginatedPosts)
   async posts(
     @Arg('limit', () => Int) limit: number,
-    @Arg('cursor', () => String, { nullable: true }) cursor: string | null
+    @Arg('cursor', () => String, { nullable: true }) cursor: string | null,
+    @Ctx() { req }: MyContext
   ): Promise<PaginatedPosts> {
     // pagination logic
     const realLimit = Math.min(50, limit);
     const realLimitPlusOne = realLimit + 1;
+    const userId = req.session.userId;
 
-    const replacements: any[] = [realLimitPlusOne];
+    const replacements: any[] = [realLimitPlusOne, userId];
 
     if (cursor) {
       replacements.push(new Date(parseInt(cursor)));
@@ -66,10 +89,15 @@ export class PostResolver {
         'id', u.id,
         'username', u.username,
         'email', u.email
-      ) creator
+      ) creator,
+      ${
+        userId
+        ? `(SELECT value FROM updoot WHERE "userId" = $2 and "postId" = p.id) "voteStatus"`
+        : `null as "voteStatus"`
+      }
       FROM post p
       INNER JOIN public.user u ON u.id = p."creatorId"
-      ${cursor ? `WHERE p."createdAt" < $2` : ``}
+      ${cursor ? `WHERE p."createdAt" < $3` : ``}
       ORDER BY p."createdAt" DESC
       LIMIT $1
     `, replacements)

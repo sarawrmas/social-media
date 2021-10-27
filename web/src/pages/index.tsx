@@ -1,11 +1,11 @@
-// import NavBar from "../components/NavBar";
 import { useState } from "react";
 import { withUrqlClient } from 'next-urql';
 import createUrqlClient from "../utils/createUrqlClient";
 import { usePostsQuery } from "../generated/graphql";
-import { Spinner, Link, Stack, Box, Heading, Text, Flex, Button } from "@chakra-ui/react"
+import { Spinner, Link, Stack, Heading, Flex, Button } from "@chakra-ui/react"
 import NextLink from "next/link";
 import Wrapper from '../components/Wrapper';
+import SinglePost from "../components/SinglePost";
 
 const Index = () => {
   const [variables, setVariables] = useState({ limit: 20, cursor: null as null | string})
@@ -33,11 +33,7 @@ const Index = () => {
           </Flex>
           <Stack spacing={8}>
             {data!.posts.posts.map((p) => (
-              <Box key={p.id} p={5} shadow="md" borderWidth="1px">
-                <Heading fontSize="xl">{p.postTitle}</Heading>
-                <Text mt={4}>{p.textSnippet}</Text>
-                <Text>By {p.creator.username}</Text>
-              </Box>
+              <SinglePost post={p} key={p.id} />
             ))}
           </Stack>
           {data?.posts.hasMore ? (
@@ -62,7 +58,6 @@ const Index = () => {
           }
         </>
       )}
-
     </Wrapper>
   )
 }
