@@ -37,7 +37,7 @@ const ChangePassword: NextPage = () => {
   return (
     <>
       <Wrapper variant="small">
-      <Heading textAlign="center" fontSize="30px" color="pink" mb={10}>Change Password</Heading>
+      <Heading textAlign="center" fontSize="30px" color="tomato" mb={10}>Change Password</Heading>
         <Formik initialValues={{ newPassword: '' }} onSubmit={handleSubmit}>
           {({isSubmitting}) => (
             <Form>
@@ -53,7 +53,7 @@ const ChangePassword: NextPage = () => {
               </Box>
               : null}
               <Flex justifyContent="center">
-                <Button mt={4} type="submit" isLoading={isSubmitting} background="purple" color="white" p={15}>Reset Password</Button>
+                <Button mt={4} type="submit" isLoading={isSubmitting} background="tomato" color="white" p={15}>Reset Password</Button>
               </Flex>
               <Flex>
                 <NextLink href="/login">

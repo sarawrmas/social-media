@@ -15,7 +15,13 @@ const Index = () => {
   });
 
   if (!fetching && !data) {
-    return <Flex justifyContent="center"><Heading color="pink" fontSize="2rem">Post retrieval failed</Heading></Flex>
+    return (
+      <Wrapper>
+        <Flex justifyContent="center">
+          <Heading color="tomato" fontSize="2rem">Post retrieval failed</Heading>
+        </Flex>
+      </Wrapper>
+    )
   }
 
   return (
@@ -26,11 +32,11 @@ const Index = () => {
         </Flex>
       ) : (
         <>
-          <Flex>
+          {/* <Flex>
             <NextLink href="/create-post">
               <Link color="blue" ml="auto">Create New Post</Link>
             </NextLink>
-          </Flex>
+          </Flex> */}
           <Stack spacing={8}>
             {data!.posts.posts.map((p) => (
               <SinglePost post={p} key={p.id} />
@@ -39,7 +45,7 @@ const Index = () => {
           {data?.posts.hasMore ? (
             <Flex>
               <Button m="auto" mt={20} mb={20} p={15}
-                background="purple" color="white"
+                background="tomato" color="white"
                 type="submit"
                 isLoading={fetching}
                 onClick={() => setVariables({

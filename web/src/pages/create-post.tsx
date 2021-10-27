@@ -29,7 +29,7 @@ const CreatePost: React.FC<{}> = ({}) => {
             <InputField textarea name="postBody" placeholder="Start typing..." label="Body" />
             </Box>
             <Flex justifyContent="center">
-              <Button mt={4} type="submit" isLoading={isSubmitting} background="purple" color="white" p={15}>Create Post</Button>
+              <Button mt={4} type="submit" isLoading={isSubmitting} background="tomato" color="white" p={15}>Create Post</Button>
             </Flex>
           </Form>
         )}

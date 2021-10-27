@@ -33,7 +33,7 @@ const Login: React.FC<loginProps> = ({}) => {
 
   return (
     <Wrapper variant="small">
-      <Heading textAlign="center" fontSize="30px" color="pink" mb={10}>Log In</Heading>
+      <Heading textAlign="center" fontSize="30px" color="tomato" mb={10}>Log In</Heading>
       <Formik initialValues={{usernameOrEmail: '', password: ''}} onSubmit={handleSubmit}>
         {({isSubmitting}) => (
           <Form>
@@ -47,7 +47,7 @@ const Login: React.FC<loginProps> = ({}) => {
               </NextLink><br />
             </Flex>
             <Flex justifyContent="center">
-              <Button mt={4} type="submit" isLoading={isSubmitting} background="purple" color="white" p={15}>Login</Button>
+              <Button mt={4} type="submit" isLoading={isSubmitting} background="tomato" color="white" p={15}>Login</Button>
             </Flex>
 
           </Form>

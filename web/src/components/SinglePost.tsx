@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Text, Flex, IconButton, Box, Heading } from "@chakra-ui/react"
+import { Text, Flex, IconButton, Box, Heading, Link } from "@chakra-ui/react"
 import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
 import { PostSnippetFragment, useVoteMutation } from "../generated/graphql";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
 
 interface SinglePostProps {
   post: PostSnippetFragment
@@ -10,6 +12,8 @@ interface SinglePostProps {
 const SinglePost: React.FC<SinglePostProps> = ({post}) => {
   const [loadingState, setLoadingState] = useState<"updoot-loading" | "downdoot-loading" | "not-loading">("not-loading")
   const [, vote] = useVoteMutation();
+  const router = useRouter();
+
   return (
     <>
       <Flex key={post.id} p={5} shadow="md" borderWidth="1px">
@@ -51,7 +55,15 @@ const SinglePost: React.FC<SinglePostProps> = ({post}) => {
           />
         </Flex>
         <Box>
-          <Heading fontSize="xl">{post.postTitle}</Heading>
+          {router.route === "/" ? (
+            <NextLink href="/post/[id]" as={`/post/${post.id}`}>
+              <Link>
+                <Heading fontSize="xl">{post.postTitle}</Heading>
+              </Link>
+            </NextLink>
+          ) : (
+            <Heading fontSize="xl">{post.postTitle}</Heading>
+          )}
           <Text mt={4} style={{wordBreak: "break-word"}}>{post.textSnippet}</Text>
           <Text>By {post.creator.username}</Text>
         </Box>

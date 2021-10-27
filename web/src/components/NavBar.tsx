@@ -39,7 +39,10 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
     body = (
       <>
         <Flex>
-          <Box mr={6}>{data.me.username}</Box>
+          <Box mr={20}>{data.me.username}</Box>
+          <NextLink href="/create-post">
+            <Link mr={20}>Create New Post</Link>
+          </NextLink>
           <Button
             variant="link"
             color="white"
@@ -53,7 +56,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
 
   return (
     <>
-    <Flex bg="#521B41" p={15} color="white" fontSize="20px" position="sticky" top={0} zIndex={99999}>
+    <Flex bg="tomato" p={15} color="white" fontSize="20px" position="sticky" top={0} zIndex={99999}>
       <Box mr={'auto'}>
         <NextLink href="/">
           LiReddit

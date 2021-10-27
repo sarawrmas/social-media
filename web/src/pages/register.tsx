@@ -24,7 +24,7 @@ const Register: React.FC<registerProps> = ({}) => {
 
   return (
     <Wrapper variant="small">
-      <Heading textAlign="center" fontSize="30px" color="pink" mb={10}>Register</Heading>
+      <Heading textAlign="center" fontSize="30px" color="tomato" mb={10}>Register</Heading>
       <Formik initialValues={{email: '', username: '', password: ''}} onSubmit={handleSubmit}>
         {({isSubmitting}) => (
           <Form>
@@ -36,7 +36,7 @@ const Register: React.FC<registerProps> = ({}) => {
             <InputField name="password" placeholder="Password" label="Password" type="password" />
             </Box>
             <Flex justifyContent="center">
-              <Button mt={4} type="submit" isLoading={isSubmitting} background="purple" color="white" p={15}>Register</Button>
+              <Button mt={4} type="submit" isLoading={isSubmitting} background="tomato" color="white" p={15}>Register</Button>
             </Flex>
           </Form>
         )}
