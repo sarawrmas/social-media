@@ -13,9 +13,9 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
     // do not run query if no data
     pause: isServer()
   });
-  const handleLogout = () => {
-    logout();
-    router.push("/")
+  const handleLogout = async () => {
+    await logout();
+    router.reload();
   }
   // console.log(data?.me)
   let body = null;

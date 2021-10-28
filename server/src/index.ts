@@ -18,6 +18,8 @@ import cors from 'cors';
 import Redis from "ioredis";
 import path from "path";
 import { Updoot } from "./entities/Updoot";
+import { createUserLoader } from "./utils/createUserLoader";
+import { createUpdootLoader } from "./utils/createUpdootLoader";
 require('dotenv').config();
 
 const main = async () => {
@@ -82,9 +84,13 @@ const main = async () => {
       ApolloServerPluginLandingPageGraphQLPlayground()
     ],
     // function that returns an object for the context
-    context: ({ req, res }) =>
-    // : MyContext => <MyContext>
-    ({ req, res, redis })
+    context: ({ req, res }) => ({
+      req,
+      res,
+      redis,
+      userLoader: createUserLoader(),
+      updootLoader: createUpdootLoader()
+    })
   });
 
   const startServer = async() => {

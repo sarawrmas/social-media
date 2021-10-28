@@ -2,6 +2,7 @@ import { isAuth } from "../middleware/isAuth";
 import { MyContext } from "src/types";
 import { Arg, Ctx, Field, FieldResolver, Info, Int, Mutation, ObjectType, Query, Resolver, Root, UseMiddleware } from "type-graphql";
 import { Post } from "../entities/Post";
+import { User } from "../entities/User";
 import { getConnection } from "typeorm";
 import { Updoot } from "../entities/Updoot";
 import { PostInput } from "./PostInput";
@@ -19,6 +20,31 @@ export class PostResolver {
   @FieldResolver(() => String)
   textSnippet(@Root() post: Post) {
     return post.postBody.slice(0, 100);
+  }
+
+  @FieldResolver(() => User)
+  creator(
+    @Root() post: Post,
+    @Ctx() { userLoader }: MyContext
+  ) {
+    return userLoader.load(post.creatorId);
+  }
+  
+  @FieldResolver(() => Int, { nullable: true })
+  async voteStatus(
+    @Root() post: Post,
+    @Ctx() { updootLoader, req }: MyContext
+  ) {
+    if (!req.session.userId) {
+      return null
+    }
+
+    const updoot = await updootLoader.load({
+      postId: post.id,
+      userId: req.session.userId
+    });
+
+    return updoot ? updoot.value : null
   }
 
   @Mutation(() => Boolean)
@@ -75,28 +101,16 @@ export class PostResolver {
     // pagination logic
     const realLimit = Math.min(50, limit);
     const realLimitPlusOne = realLimit + 1;
-    const userId = req.session.userId;
 
-    const replacements: any[] = [realLimitPlusOne, userId];
+    const replacements: any[] = [realLimitPlusOne];
 
     if (cursor) {
       replacements.push(new Date(parseInt(cursor)));
     }
 
     const posts = await getConnection().query(`
-      SELECT p.*,
-      json_build_object(
-        'id', u.id,
-        'username', u.username,
-        'email', u.email
-      ) creator,
-      ${
-        userId
-        ? `(SELECT value FROM updoot WHERE "userId" = $2 and "postId" = p.id) "voteStatus"`
-        : `null as "voteStatus"`
-      }
+      SELECT p.*
       FROM post p
-      INNER JOIN public.user u ON u.id = p."creatorId"
       ${cursor ? `WHERE p."createdAt" < $3` : ``}
       ORDER BY p."createdAt" DESC
       LIMIT $1
@@ -109,7 +123,7 @@ export class PostResolver {
   post(
     @Arg("id", () => Int) id: number): Promise<Post | undefined> {
     // find post by id
-    return Post.findOne(id, { relations: ["creator"] });
+    return Post.findOne(id);
   }
 
   @Mutation(() => Post)
