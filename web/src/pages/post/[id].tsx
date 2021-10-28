@@ -1,27 +1,27 @@
-import { Flex, Spinner, Heading } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
-import { useRouter } from "next/router";
 import React from "react";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import SinglePost from "../../components/SinglePost";
 import Wrapper from "../../components/Wrapper";
-import { PostSnippetFragment, usePostQuery } from "../../generated/graphql";
+import WrongPage from "../../components/WrongPage";
+import { PostSnippetFragment } from "../../generated/graphql";
 import createUrqlClient from "../../utils/createUrqlClient";
+import { getPostFromUrl } from "../../utils/getPostFromUrl";
+import { usePostQuery } from "../../generated/graphql";
 
 const Post: React.FC = () => {
-  const router = useRouter();
-  const intId = typeof router.query.id === 'string' ? parseInt(router.query.id) : -1;
+  const postId = getPostFromUrl();
+
   const [{data, error, fetching}] = usePostQuery({
-    pause: intId === -1,
+    pause: postId === -1,
     variables: {
-      id: intId
+      id: postId
     }
   });
 
   if (fetching) {
     return (
-    <Flex justifyContent="center">
-      <Spinner size="xl" color="blue.500"/>
-    </Flex>
+    <LoadingSpinner />
     );
   };
 
@@ -30,13 +30,7 @@ const Post: React.FC = () => {
   }
 
   if (!data?.post) {
-    return (
-      <Wrapper>
-        <Flex justifyContent="center">
-          <Heading color="tomato" fontSize="2rem">No post found</Heading>
-        </Flex>
-      </Wrapper>
-    )
+    return <WrongPage />
   }
 
   return (

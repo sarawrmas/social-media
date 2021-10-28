@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Text, Flex, IconButton, Box, Heading, Link } from "@chakra-ui/react"
-import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
-import { PostSnippetFragment, useVoteMutation } from "../generated/graphql";
+import { ArrowUpIcon, ArrowDownIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { PostSnippetFragment, useDeletePostMutation, useMeQuery, useVoteMutation } from "../generated/graphql";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 
@@ -13,6 +13,8 @@ const SinglePost: React.FC<SinglePostProps> = ({post}) => {
   const [loadingState, setLoadingState] = useState<"updoot-loading" | "downdoot-loading" | "not-loading">("not-loading")
   const [, vote] = useVoteMutation();
   const router = useRouter();
+  const [, deletePost] = useDeletePostMutation();
+  const [{data: meData}] = useMeQuery();
 
   return (
     <>
@@ -54,7 +56,7 @@ const SinglePost: React.FC<SinglePostProps> = ({post}) => {
             isLoading={loadingState === "downdoot-loading"}
           />
         </Flex>
-        <Box>
+        <Box flex={1}>
           {router.route === "/" ? (
             <NextLink href="/post/[id]" as={`/post/${post.id}`}>
               <Link>
@@ -64,7 +66,30 @@ const SinglePost: React.FC<SinglePostProps> = ({post}) => {
           ) : (
             <Heading fontSize="xl">{post.postTitle}</Heading>
           )}
-          <Text mt={4} style={{wordBreak: "break-word"}}>{post.textSnippet}</Text>
+          {meData?.me?.id !== post.creator.id ? null : (
+          <Flex>
+            <Text flex={1} mt={4} style={{wordBreak: "break-word"}}>{post.textSnippet}</Text>
+            <Flex direction="column" justifyContent="space-around">
+              <NextLink href="/post/edit/[id]" as={`/post/edit/${post.id}`}>
+                <IconButton
+                  aria-label="edit post"
+                  icon={<EditIcon mb={20} />}
+                  ml="auto"
+                  color="blue"
+                />
+              </NextLink>
+              <IconButton
+                aria-label="delete post"
+                icon={<DeleteIcon />}
+                onClick={() => {
+                  deletePost({ id: post.id })
+                }}
+                ml="auto"
+                color="tomato"
+              />
+            </Flex>
+          </Flex>
+          )}
           <Text>By {post.creator.username}</Text>
         </Box>
       </Flex>
