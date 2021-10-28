@@ -46,7 +46,7 @@ const main = async () => {
   const redis = new Redis();
 
   app.use(cors({
-    origin: "http://localhost:3000",
+    origin: "https://murmuring-castle-63650.herokuapp.com/",
     credentials: true,
   }))
 

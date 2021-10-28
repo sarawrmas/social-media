@@ -9,7 +9,7 @@
 * [Credits](#credits)
 
 ## Deployed
-Visit the application at INSERT URL HERE.
+Visit the application at https://murmuring-castle-63650.herokuapp.com/
 
 ## Description
 A Reddit clone, built with tutorial by Ben Awad. Visit [credits](#credits) section for links.
